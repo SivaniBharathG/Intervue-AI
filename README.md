@@ -1,22 +1,3 @@
-# AI Interview Coach
-
-A multi-agent mock interview tool I built to practice for my own AI
-Engineer / TPM interviews. Four agents (interviewer, evaluator, coach, resume
-parser) coordinated by a plain-Python orchestrator. Questions come from a small
-tagged bank via RAG instead of being freely generated, scores get saved so
-future sessions target whatever I scored lowest on, and voice is optional.
-Runs locally, $0 to run. Setup is in [Setup](#setup) below.
-
-**Author:** Aditya Gupta ([GitHub](https://github.com/adityagupta1709))
-
----
-
-## Why I built this
-
-I wanted interview practice that actually adapts instead of asking me random
-questions every time, and I wanted to actually understand agent orchestration
-and RAG by building them, not just by using a framework. This is that -
-built from scratch, not a wrapper around an existing tool.
 
 ## What it does
 
