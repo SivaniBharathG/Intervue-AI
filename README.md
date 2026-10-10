@@ -82,7 +82,7 @@ Total cost to run: $0.
 3. Free key at https://console.groq.com/keys
 4. `cp .env.example .env` (Windows: `copy`), paste the key in
 5. `python main.py`
-6. Open http://127.0.0.1:8000
+6. Open (http://127.0.0.1:8000/)
 
 ## Using it
 
