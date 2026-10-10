@@ -1,10 +1,14 @@
+
 # Environment / secrets
 .env
+.env.*
+!.env.example
 
 # Python
 __pycache__/
-*.pyc
+*.py[cod]
 venv/
+.venv/
 *.egg-info/
 
 # Generated / local data - don't commit these

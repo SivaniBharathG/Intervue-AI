@@ -1,65 +1,387 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>AI Interview Coach</title>
-<link rel="stylesheet" href="/static/styles.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>InterviewIQ</title>
+    <link rel="stylesheet" href="/static/styles.css">
 </head>
+
 <body>
-  <div class="container">
-    <h1>AI Interview Coach</h1>
+
+<div class="container">
+
+    <header class="hero">
+        <div class="logo">IQ</div>
+        <div>
+            <h1>InterviewIQ</h1>
+            <p>AI-powered personalized interview preparation</p>
+        </div>
+    </header>
+
+
+    <!-- ========================= -->
+    <!-- SETUP SECTION -->
+    <!-- ========================= -->
 
     <section id="setup">
-      <h2>1. Tell it about the role</h2>
-      <label>Job description or role summary (paste anything, or leave blank)</label>
-      <textarea id="jobDescription" rows="4" placeholder="Paste a job description here..."></textarea>
 
-      <label>Resume text (optional, paste anything)</label>
-      <textarea id="resumeText" rows="4" placeholder="Paste your resume text here..."></textarea>
+        <div class="section-title">
+            <span>01</span>
+            <div>
+                <h2>Build your interview profile</h2>
+                <p>Upload your resume and provide the job description.</p>
+            </div>
+        </div>
 
-      <button id="analyzeBtn">Analyze</button>
-      <div id="analyzeResult"></div>
 
-      <label>Number of questions</label>
-      <input id="numQuestions" type="number" value="3" min="1" max="10">
+        <!-- RESUME -->
+        <div class="card">
 
-      <label><input id="voiceToggle" type="checkbox"> Use voice (spoken questions + mic answers)</label>
+            <h3>Upload your resume</h3>
+            <p class="muted">
+                Upload your resume as a PDF. InterviewIQ will extract your
+                skills, projects and experience.
+            </p>
 
-      <button id="startBtn">Start interview</button>
+            <label for="resumeFile" class="upload-box">
+
+                <div class="upload-icon">↑</div>
+
+                <strong>Choose your resume</strong>
+
+                <span>
+                    PDF files only
+                </span>
+
+                <input
+                    id="resumeFile"
+                    type="file"
+                    accept=".pdf,application/pdf"
+                    hidden
+                >
+
+            </label>
+
+            <div id="resumeInfo" class="file-info hidden">
+                <div>
+                    <strong id="resumeFileName"></strong>
+                    <span id="resumeFileSize"></span>
+                </div>
+
+                <button
+                    id="removeResumeBtn"
+                    type="button"
+                    class="secondary-btn"
+                >
+                    Remove
+                </button>
+            </div>
+
+            <button
+                id="uploadResumeBtn"
+                type="button"
+                class="primary-btn"
+            >
+                Analyze Resume
+            </button>
+
+            <div id="resumeStatus"></div>
+
+        </div>
+
+
+        <!-- JOB DESCRIPTION -->
+        <div class="card">
+
+            <h3>Job description</h3>
+
+            <p class="muted">
+                Paste the job description for the position you are preparing for.
+            </p>
+
+            <textarea
+                id="jobDescription"
+                rows="8"
+                placeholder="Paste the job description here..."
+            ></textarea>
+
+            <button
+                id="analyzeJDBtn"
+                type="button"
+                class="primary-btn"
+            >
+                Analyze Job Description
+            </button>
+
+            <div id="jdStatus"></div>
+
+        </div>
+
+
+        <!-- PROFILE MATCH -->
+        <div id="matchSection" class="card hidden">
+
+            <h3>Resume × Job Match</h3>
+
+            <div class="match-score">
+                <span id="matchPercentage">--%</span>
+                <small>Profile Match</small>
+            </div>
+
+            <div class="match-grid">
+
+                <div>
+                    <h4>Matching Skills</h4>
+                    <div id="matchingSkills"></div>
+                </div>
+
+                <div>
+                    <h4>Missing Skills</h4>
+                    <div id="missingSkills"></div>
+                </div>
+
+                <div>
+                    <h4>Relevant Projects</h4>
+                    <div id="relevantProjects"></div>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- INTERVIEW SETTINGS -->
+        <div id="interviewSettings" class="card hidden">
+
+            <h3>Interview settings</h3>
+
+            <label for="numQuestions">
+                Number of questions
+            </label>
+
+            <input
+                id="numQuestions"
+                type="number"
+                value="5"
+                min="1"
+                max="15"
+            >
+
+            <label class="checkbox-row">
+                <input
+                    id="voiceToggle"
+                    type="checkbox"
+                >
+
+                <span>
+                    Enable voice interview
+                </span>
+            </label>
+
+            <button
+                id="startBtn"
+                type="button"
+                class="primary-btn large-btn"
+            >
+                Start Personalized Interview →
+            </button>
+
+        </div>
+
     </section>
+
+
+    <!-- ========================= -->
+    <!-- INTERVIEW SECTION -->
+    <!-- ========================= -->
 
     <section id="interview" class="hidden">
-      <h2 id="questionCounter"></h2>
-      <p id="questionText"></p>
-      <audio id="questionAudio" controls class="hidden"></audio>
 
-      <div id="textAnswerArea">
-        <textarea id="answerText" rows="3" placeholder="Type your answer..."></textarea>
-      </div>
+        <div class="interview-header">
 
-      <div id="voiceAnswerArea" class="hidden">
-        <button id="recordBtn">Start recording</button>
-        <span id="recordStatus"></span>
-      </div>
+            <div>
+                <span class="eyebrow">LIVE INTERVIEW</span>
+                <h2 id="questionCounter"></h2>
+            </div>
 
-      <button id="submitAnswerBtn">Submit answer</button>
+        </div>
 
-      <div id="feedbackBox" class="hidden">
-        <h3>Scores</h3>
-        <pre id="scoresText"></pre>
-        <h3>Coach feedback</h3>
-        <p id="feedbackText"></p>
-        <audio id="feedbackAudio" controls class="hidden"></audio>
-        <button id="nextBtn" class="hidden">Next question</button>
-      </div>
+        <div class="question-card">
+
+            <p class="question-label">
+                INTERVIEWER
+            </p>
+
+            <h2 id="questionText">
+                Loading question...
+            </h2>
+
+            <audio
+                id="questionAudio"
+                controls
+                class="hidden"
+            ></audio>
+
+        </div>
+
+
+        <!-- TEXT ANSWER -->
+
+        <div id="textAnswerArea" class="answer-card">
+
+            <label for="answerText">
+                Your answer
+            </label>
+
+            <textarea
+                id="answerText"
+                rows="8"
+                placeholder="Take your time and explain your answer..."
+            ></textarea>
+
+        </div>
+
+
+        <!-- VOICE ANSWER -->
+
+        <div
+            id="voiceAnswerArea"
+            class="answer-card hidden"
+        >
+
+            <p>
+                Answer using your microphone.
+            </p>
+
+            <button
+                id="recordBtn"
+                type="button"
+                class="record-btn"
+            >
+                🎙 Start Recording
+            </button>
+
+            <p id="recordStatus"></p>
+
+        </div>
+
+
+        <button
+            id="submitAnswerBtn"
+            type="button"
+            class="primary-btn large-btn"
+        >
+            Submit Answer
+        </button>
+
+
+        <!-- FEEDBACK -->
+
+        <div
+            id="feedbackBox"
+            class="feedback-card hidden"
+        >
+
+            <h3>AI Evaluation</h3>
+
+            <div class="score-grid">
+
+                <div class="score">
+                    <span id="technicalScore">--</span>
+                    <small>Technical Accuracy</small>
+                </div>
+
+                <div class="score">
+                    <span id="relevanceScore">--</span>
+                    <small>Relevance</small>
+                </div>
+
+                <div class="score">
+                    <span id="specificityScore">--</span>
+                    <small>Specificity</small>
+                </div>
+
+                <div class="score">
+                    <span id="communicationScore">--</span>
+                    <small>Communication</small>
+                </div>
+
+            </div>
+
+
+            <div class="transcript-box">
+
+                <h4>Your answer</h4>
+
+                <p id="transcriptText">
+                    No transcript available.
+                </p>
+
+            </div>
+
+
+            <div class="coach-box">
+
+                <h4>AI Coach Feedback</h4>
+
+                <p id="feedbackText"></p>
+
+            </div>
+
+
+            <audio
+                id="feedbackAudio"
+                controls
+                class="hidden"
+            ></audio>
+
+
+            <button
+                id="nextBtn"
+                type="button"
+                class="primary-btn hidden"
+            >
+                Next Question →
+            </button>
+
+        </div>
+
     </section>
 
-    <section id="summary" class="hidden">
-      <h2>Session complete</h2>
-      <p>Nice work. Here's your history:</p>
-      <div id="historyTable"></div>
+
+    <!-- ========================= -->
+    <!-- SUMMARY -->
+    <!-- ========================= -->
+
+    <section
+        id="summary"
+        class="hidden"
+    >
+
+        <div class="summary-header">
+
+            <span class="eyebrow">
+                INTERVIEW COMPLETE
+            </span>
+
+            <h2>Your Interview Report</h2>
+
+            <p>
+                Review your performance and identify areas to improve.
+            </p>
+
+        </div>
+
+
+        <div id="historyTable"></div>
+
     </section>
-  </div>
-  <script src="/static/app.js"></script>
+
+</div>
+
+
+<script src="/static/app.js"></script>
+
 </body>
 </html>
